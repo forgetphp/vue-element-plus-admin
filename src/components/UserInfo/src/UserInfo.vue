@@ -7,16 +7,19 @@ import { useRouter } from 'vue-router'
 import { loginOutApi } from '@/api/login'
 import { useDesign } from '@/hooks/web/useDesign'
 import { useTagsViewStore } from '@/store/modules/tagsView'
+import { useAppStoreWithOut } from '@/store/modules/app'
 
 const tagsViewStore = useTagsViewStore()
 
 const { getPrefixCls } = useDesign()
 
 const prefixCls = getPrefixCls('user-info')
+const appStore = useAppStoreWithOut()
 
 const { t } = useI18n()
 
 const { wsCache } = useCache()
+const userInfo = wsCache.get(appStore.getUserInfo)
 
 const { replace } = useRouter()
 
@@ -37,26 +40,23 @@ const loginOut = () => {
     })
     .catch(() => {})
 }
-
-const toDocument = () => {
-  window.open('https://element-plus-admin-doc.cn/')
+const jumpAction = () => {
+  replace('/profile/index')
 }
 </script>
 
 <template>
   <ElDropdown :class="prefixCls" trigger="click">
     <div class="flex items-center">
-      <img
-        src="@/assets/imgs/avatar.jpg"
-        alt=""
-        class="w-[calc(var(--logo-height)-25px)] rounded-[50%]"
-      />
-      <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">Archer</span>
+      <img :src="userInfo.user.avatar" class="w-[calc(var(--logo-height)-25px)] rounded-[50%]" />
+      <span class="<lg:hidden text-14px pl-[5px] text-[var(--top-header-text-color)]">{{
+        userInfo.user.username
+      }}</span>
     </div>
     <template #dropdown>
       <ElDropdownMenu>
         <ElDropdownItem>
-          <div @click="toDocument">{{ t('common.document') }}</div>
+          <div @click="jumpAction">{{ t('common.profile') }}</div>
         </ElDropdownItem>
         <ElDropdownItem divided>
           <div @click="loginOut">{{ t('common.loginOut') }}</div>

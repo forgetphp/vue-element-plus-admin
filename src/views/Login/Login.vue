@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { LoginForm, RegisterForm } from './components'
-import { ThemeSwitch } from '@/components/ThemeSwitch'
-import { LocaleDropdown } from '@/components/LocaleDropdown'
+import { LoginForm } from './components'
+// import { ThemeSwitch } from '@/components/ThemeSwitch'
+// import { LocaleDropdown } from '@/components/LocaleDropdown'
 import { useI18n } from '@/hooks/web/useI18n'
 import { underlineToHump } from '@/utils'
 import { useAppStore } from '@/store/modules/app'
@@ -20,10 +20,6 @@ const isLogin = ref(true)
 
 const toRegister = () => {
   isLogin.value = false
-}
-
-const toLogin = () => {
-  isLogin.value = true
 }
 </script>
 
@@ -61,10 +57,10 @@ const toLogin = () => {
             <span class="text-20px font-bold">{{ underlineToHump(appStore.getTitle) }}</span>
           </div>
 
-          <div class="flex justify-end items-center space-x-10px">
+          <!-- <div class="flex justify-end items-center space-x-10px">
             <ThemeSwitch />
             <LocaleDropdown class="<xl:text-white dark:text-white" />
-          </div>
+          </div> -->
         </div>
         <Transition appear enter-active-class="animate__animated animate__bounceInRight">
           <div
@@ -75,11 +71,11 @@ const toLogin = () => {
               class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)"
               @to-register="toRegister"
             />
-            <RegisterForm
+            <!-- <RegisterForm
               v-else
               class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)"
               @to-login="toLogin"
-            />
+            /> -->
           </div>
         </Transition>
       </div>

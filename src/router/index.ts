@@ -57,6 +57,70 @@ export const constantRouterMap: AppRouteRecordRaw[] = [
 
 export const asyncRouterMap: AppRouteRecordRaw[] = [
   {
+    path: '/profile',
+    component: Layout,
+    meta: {
+      // title: '个人中心',
+      // alwaysShow: true
+      hidden: true
+      //noTagsView: true
+      // affix: true
+    },
+    name: 'Profile',
+    children: [
+      {
+        path: 'index',
+        name: 'ProfileIndex',
+        component: () => import('@/views/Profile/Index.vue'),
+        meta: {
+          title: '个人中心',
+          alwaysShow: false,
+          icon: 'clarity:document-solid'
+        }
+      }
+    ]
+  },
+  {
+    path: '/system',
+    component: Layout,
+    //redirect: '/system/administrators',
+    name: 'System',
+    meta: {
+      title: '系统设置',
+      icon: 'grommet-icons:system',
+      alwaysShow: true
+    },
+    children: [
+      {
+        path: 'administrators',
+        component: () => import('@/views/Administrator/Index.vue'),
+        name: 'SystemAdministrators',
+        meta: {
+          icon: 'clarity:administrator-solid',
+          title: '管理员管理'
+        }
+      },
+      {
+        path: 'rule',
+        component: () => import('@/views/Administrator/Index.vue'),
+        name: 'SystemRule',
+        meta: {
+          icon: 'eos-icons:cluster-role',
+          title: '角色管理'
+        }
+      },
+      {
+        path: 'menu',
+        component: () => import('@/views/Administrator/Index.vue'),
+        name: 'SystemMenus',
+        meta: {
+          icon: 'line-md:menu-unfold-right',
+          title: '菜单管理'
+        }
+      }
+    ]
+  },
+  {
     path: '/dashboard',
     component: Layout,
     redirect: '/dashboard/analysis',
@@ -84,22 +148,6 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
         meta: {
           title: t('router.workplace'),
           noCache: true
-        }
-      }
-    ]
-  },
-  {
-    path: '/external-link',
-    component: Layout,
-    meta: {},
-    name: 'ExternalLink',
-    children: [
-      {
-        path: 'https://element-plus-admin-doc.cn/',
-        name: 'DocumentLink',
-        meta: {
-          title: t('router.document'),
-          icon: 'clarity:document-solid'
         }
       }
     ]

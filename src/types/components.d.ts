@@ -20,6 +20,7 @@ export type ComponentName =
   | 'SelectV2'
   | 'InputPassword'
   | 'Editor'
+  | 'InputCaptcha'
 
 export type ColProps = {
   span?: number
