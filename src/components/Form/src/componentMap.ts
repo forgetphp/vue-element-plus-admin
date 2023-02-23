@@ -22,6 +22,7 @@ import { InputPassword } from '@/components/InputPassword'
 import { Editor } from '@/components/Editor'
 import { ComponentName } from '@/types/components'
 import { InputCaptcha } from '@/components/InputCaptcha'
+import { SMUpload, SMUploadSingle } from '@/components/Upload'
 
 const componentMap: Recordable<Component, ComponentName> = {
   Radio: ElRadioGroup,
@@ -45,7 +46,9 @@ const componentMap: Recordable<Component, ComponentName> = {
   RadioButton: ElRadioGroup,
   InputPassword: InputPassword,
   Editor: Editor,
-  InputCaptcha: InputCaptcha
+  InputCaptcha: InputCaptcha,
+  SMUpload: SMUpload,
+  SMUploadSingle: SMUploadSingle
 }
 
 export { componentMap }

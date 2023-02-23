@@ -45,7 +45,7 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     // 当前页
     currentPage: 1,
     // 总条数
-    total: 10,
+    total: 15,
     // 表格数据
     tableList: [],
     // AxiosConfig 配置
@@ -61,8 +61,8 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
   const paramsObj = computed(() => {
     return {
       ...tableObject.params,
-      pageSize: tableObject.pageSize,
-      pageIndex: tableObject.currentPage
+      limit: tableObject.pageSize,
+      page: tableObject.currentPage
     }
   })
 
@@ -131,8 +131,12 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
         tableObject.loading = false
       })
       if (res) {
-        tableObject.tableList = get(res.data || {}, config?.response.list as string)
-        tableObject.total = get(res.data || {}, config?.response?.total as string) || 0
+        console.log('response ==> ', res)
+        // tableObject.tableList = get(res.data || {}, config?.response.data as string)
+        // tableObject.total = get(res.data || {}, config?.response?.total as string) || 0
+        tableObject.tableList = get(res.data || {}, config?.response.list as string, res.data)
+        tableObject.total =
+          get(res.data || {}, config?.response?.total as string, res.meta.total) || 0
       }
     },
     setProps: async (props: TableProps = {}) => {
@@ -151,8 +155,8 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     setSearchParams: (data: Recordable) => {
       tableObject.currentPage = 1
       tableObject.params = Object.assign(tableObject.params, {
-        pageSize: tableObject.pageSize,
-        pageIndex: tableObject.currentPage,
+        limit: tableObject.pageSize,
+        page: tableObject.currentPage,
         ...data
       })
       methods.getList()

@@ -21,6 +21,8 @@ export type ComponentName =
   | 'InputPassword'
   | 'Editor'
   | 'InputCaptcha'
+  | 'SMUpload'
+  | 'SMUploadSingle'
 
 export type ColProps = {
   span?: number

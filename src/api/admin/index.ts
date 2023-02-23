@@ -15,3 +15,29 @@ export const changeBasic = (data): Promise<IResponse> => {
 export const getUserInfoApi = (): Promise<IResponse> => {
   return request.get({ url: 'admin' })
 }
+
+export const getTableListApi = (params: any): Promise<IResponse> => {
+  console.log('getTableListApi params==>', params)
+  return request.get({ url: 'administrator', params })
+}
+
+export const updateTableApi = (id, params: any): Promise<IResponse> => {
+  return request.put({ url: `administrator/${id}`, data: params })
+}
+
+export const saveTableApi = (params: any): Promise<IResponse> => {
+  return request.post({ url: 'administrator', data: params })
+}
+
+export const delTableListApi = (params: any): Promise<IResponse> => {
+  return request.delete({
+    url: 'administrator',
+    data: {
+      administrator: params
+    }
+  })
+}
+
+export const disableAdminApi = (id, params: any): Promise<IResponse> => {
+  return request.put({ url: `administrator/${id}/status`, data: params })
+}
