@@ -450,5 +450,12 @@ export default {
     state_yes: '正常',
     disable: '禁用',
     password: '密码'
+  },
+  role: {
+    id: 'ID',
+    name: '角色',
+    display_name: '角色名称',
+    state: '状态',
+    description: '备注'
   }
 }

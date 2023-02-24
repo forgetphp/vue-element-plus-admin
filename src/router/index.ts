@@ -102,7 +102,7 @@ export const asyncRouterMap: AppRouteRecordRaw[] = [
       },
       {
         path: 'rule',
-        component: () => import('@/views/Administrator/Index.vue'),
+        component: () => import('@/views/Role/Index.vue'),
         name: 'SystemRule',
         meta: {
           icon: 'eos-icons:cluster-role',
