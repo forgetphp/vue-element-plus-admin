@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { PropType } from 'vue'
-import type { TableData } from '@/api/table/types'
+import type { AdminInfo } from '@/api/admin/type'
 import { Descriptions } from '@/components/Descriptions'
 import { useI18n } from '@/hooks/web/useI18n'
-import { ElTag } from 'element-plus'
+import { ElImage, ElTag } from 'element-plus'
 import { DescriptionsSchema } from '@/types/descriptions'
 
 const { t } = useI18n()
 
 defineProps({
   currentRow: {
-    type: Object as PropType<Nullable<TableData>>,
+    type: Object as PropType<Nullable<AdminInfo>>,
     default: () => null
   },
   detailSchema: {
@@ -22,20 +22,14 @@ defineProps({
 
 <template>
   <Descriptions :schema="detailSchema" :data="currentRow || {}">
-    <template #importance="{ row }: { row: TableData }">
-      <ElTag :type="row.importance === 1 ? 'success' : row.importance === 2 ? 'warning' : 'danger'">
-        {{
-          row.importance === 1
-            ? t('tableDemo.important')
-            : row.importance === 2
-            ? t('tableDemo.good')
-            : t('tableDemo.commonly')
-        }}
+    <template #state="{ row }: { row: AdminInfo }">
+      <ElTag :type="row.state === 0 ? 'success' : row.state === 2 ? 'warning' : 'danger'">
+        {{ row.state === 0 ? t('adminstrator.state_yes') : t('adminstrator.disable') }}
       </ElTag>
     </template>
 
-    <template #content="{ row }: { row: TableData }">
-      <div v-html="row.content"></div>
+    <template #avatar="{ row }: { row: AdminInfo }">
+      <ElImage :src="row.avatar" :preview-src-list="[row.avatar]" :lazy="true" />
     </template>
   </Descriptions>
 </template>

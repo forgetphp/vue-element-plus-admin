@@ -4,4 +4,5 @@ export type AdminInfo = {
   password: string
   phone: string
   avatar: string
+  state: number
 }
