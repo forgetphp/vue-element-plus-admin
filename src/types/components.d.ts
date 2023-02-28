@@ -20,6 +20,10 @@ export type ComponentName =
   | 'SelectV2'
   | 'InputPassword'
   | 'Editor'
+  | 'InputCaptcha'
+  | 'SMUpload'
+  | 'SMUploadSingle'
+  | 'TreeSelect'
 
 export type ColProps = {
   span?: number

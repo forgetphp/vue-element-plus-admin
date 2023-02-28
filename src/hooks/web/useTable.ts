@@ -61,8 +61,8 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
   const paramsObj = computed(() => {
     return {
       ...tableObject.params,
-      pageSize: tableObject.pageSize,
-      pageIndex: tableObject.currentPage
+      limit: tableObject.pageSize,
+      page: tableObject.currentPage
     }
   })
 
@@ -131,8 +131,12 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
         tableObject.loading = false
       })
       if (res) {
-        tableObject.tableList = get(res.data || {}, config?.response.list as string)
-        tableObject.total = get(res.data || {}, config?.response?.total as string) || 0
+        console.log('response ==> ', res)
+        // tableObject.tableList = get(res.data || {}, config?.response.data as string)
+        // tableObject.total = get(res.data || {}, config?.response?.total as string) || 0
+        tableObject.tableList = get(res.data || {}, config?.response.list as string, res.data)
+        tableObject.total =
+          get(res.data || {}, config?.response?.total as string, res.meta.total) || 0
       }
     },
     setProps: async (props: TableProps = {}) => {
@@ -151,14 +155,19 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
     setSearchParams: (data: Recordable) => {
       tableObject.currentPage = 1
       tableObject.params = Object.assign(tableObject.params, {
-        pageSize: tableObject.pageSize,
-        pageIndex: tableObject.currentPage,
+        limit: tableObject.pageSize,
+        page: tableObject.currentPage,
         ...data
       })
       methods.getList()
     },
     // 删除数据
-    delList: async (ids: string[] | number[], multiple: boolean, message = true) => {
+    delList: async (
+      ids: string[] | number[],
+      multiple: boolean,
+      message = true,
+      callback = () => {}
+    ) => {
       const tableRef = await getTable()
       if (multiple) {
         if (!tableRef?.selections.length) {
@@ -178,9 +187,11 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
           type: 'warning'
         }).then(async () => {
           await delData(ids)
+          callback()
         })
       } else {
         await delData(ids)
+        callback()
       }
     }
   }

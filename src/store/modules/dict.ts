@@ -8,7 +8,7 @@ export interface DictState {
 
 export const useDictStore = defineStore('dict', {
   state: (): DictState => ({
-    isSetDict: false,
+    isSetDict: true,
     dictObj: {}
   }),
   getters: {

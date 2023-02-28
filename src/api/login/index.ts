@@ -20,12 +20,6 @@ export const getUserListApi = ({ params }: AxiosConfig) => {
   }>({ url: '/user/list', params })
 }
 
-export const getAdminRoleApi = (
-  params: RoleParams
-): Promise<IResponse<AppCustomRouteRecordRaw[]>> => {
-  return request.get({ url: '/role/list', params })
-}
-
-export const getTestRoleApi = (params: RoleParams): Promise<IResponse<string[]>> => {
-  return request.get({ url: '/role/list', params })
+export const getRoelMenusApi = (): Promise<IResponse<AppCustomRouteRecordRaw[]>> => {
+  return request.get({ url: '/authorization/menus' })
 }
