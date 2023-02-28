@@ -1,3 +1,4 @@
+import { getRoelMenusApi } from './api/login/index'
 import router from './router'
 import { useAppStoreWithOut } from '@/store/modules/app'
 import { useCache } from '@/hooks/web/useCache'
@@ -50,9 +51,22 @@ router.beforeEach(async (to, from, next) => {
 
       // 是否使用动态路由
       if (appStore.getDynamicRouter) {
-        userInfo.role === 'admin'
-          ? await permissionStore.generateRoutes('admin', roleRouters as AppCustomRouteRecordRaw[])
-          : await permissionStore.generateRoutes('test', roleRouters as string[])
+        // if (roleRouters.length == 0) {
+        console.log('local cache router is empty. feach to remote ==>')
+        const { data } = await getRoelMenusApi()
+        wsCache.set('roleRouters', data)
+        await permissionStore.generateRoutes('admin', data as AppCustomRouteRecordRaw[])
+        // } else {
+        // console.log('permissionStore gen router form cache ==>', roleRouters)
+        // await permissionStore.generateRoutes('admin', roleRouters as AppCustomRouteRecordRaw[])
+        // }
+
+        console.log('router beforeEach user info ==>', userInfo)
+        console.log('roleRouters ==> ', roleRouters)
+
+        // userInfo.role === 'admin'
+        //   ? await permissionStore.generateRoutes('admin', roleRouters as AppCustomRouteRecordRaw[])
+        //   : await permissionStore.generateRoutes('test', roleRouters as string[])
       } else {
         await permissionStore.generateRoutes('none')
       }

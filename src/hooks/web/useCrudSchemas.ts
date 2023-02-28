@@ -195,7 +195,7 @@ const filterFormSchema = (crudSchema: CrudSchema[], allSchemas: AllSchemas): For
             })
             if (index !== -1) {
               allSchemas.formSchema[index]!.componentProps!.options = filterOptions(
-                res,
+                res.data,
                 formSchemaItem.componentProps.optionsAlias?.labelField
               )
             }
