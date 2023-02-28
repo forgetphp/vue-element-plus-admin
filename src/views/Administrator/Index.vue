@@ -3,7 +3,7 @@ import { ContentWrap } from '@/components/ContentWrap'
 import { Search } from '@/components/Search'
 import { Dialog } from '@/components/Dialog'
 import { useI18n } from '@/hooks/web/useI18n'
-import { ElButton, ElImage, ElMessage, ElSwitch } from 'element-plus'
+import { ElButton, ElImage, ElMessage, ElOption, ElSelect, ElSwitch } from 'element-plus'
 import { Table } from '@/components/Table'
 import {
   getTableListApi,
@@ -12,6 +12,7 @@ import {
   disableAdminApi,
   updateTableApi
 } from '@/api/admin'
+
 import { useTable } from '@/hooks/web/useTable'
 import { AdminInfo } from '@/api/admin/type'
 import { h, ref, unref, reactive } from 'vue'
@@ -19,6 +20,8 @@ import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { TableColumn } from '@/types/table'
+import { getRoleSelectDataApi } from '@/api/role'
+import { RoleInfo } from '@/api/role/types'
 
 const { register, tableObject, methods } = useTable<AdminInfo>({
   getListApi: getTableListApi,
@@ -34,21 +37,32 @@ const { register, tableObject, methods } = useTable<AdminInfo>({
 
 const { getList, setSearchParams } = methods
 
-getList()
+const roles = ref<RoleInfo>()
+const getRoleComponent = async () => {
+  const { data } = await getRoleSelectDataApi('')
+  roles.value = data.map((item) => {
+    item.label = item.display_name
+    item.value = item.id
+    return item
+  })
+  getList()
+}
+
+getRoleComponent()
 
 const { t } = useI18n()
 
 const crudSchemas = reactive<CrudSchema[]>([
-  {
-    field: 'id',
-    label: t('adminstrator.id'),
-    form: {
-      show: false
-    },
-    detail: {
-      show: false
-    }
-  },
+  // {
+  //   field: 'id',
+  //   label: t('adminstrator.id'),
+  //   form: {
+  //     show: false
+  //   },
+  //   detail: {
+  //     show: false
+  //   }
+  // },
   {
     field: 'username',
     label: t('adminstrator.username'),
@@ -203,10 +217,39 @@ const crudSchemas = reactive<CrudSchema[]>([
       span: 24
     }
   },
-
+  {
+    field: 'role_ids',
+    width: '220px',
+    label: t('adminstrator.role'),
+    component: 'Select',
+    formatter: (record: Recordable, __: TableColumn, cellValue: []) => {
+      return h(
+        ElSelect,
+        {
+          multiple: true,
+          data: roles,
+          modelValue: record.role_ids
+        },
+        () =>
+          roles.value.map((item) => {
+            return h(ElOption, {
+              label: item.display_name,
+              value: item.id
+            })
+          })
+      )
+    },
+    form: {
+      show: false
+    },
+    colProps: {
+      span: 24
+    }
+  },
   {
     field: 'action',
     width: '260px',
+    fixed: 'right',
     label: t('tableDemo.action'),
     form: {
       show: false
@@ -227,14 +270,29 @@ const isFirstAdd = ref(false)
 const pushPwdComponent = () => {
   if (!isFirstAdd.value) {
     isFirstAdd.value = true
-    allSchemas.formSchema.push({
-      field: 'password',
-      label: t('adminstrator.password'),
-      component: 'Input',
-      colProps: {
-        span: 24
+    allSchemas.formSchema.push(
+      {
+        field: 'password',
+        label: t('adminstrator.password'),
+        component: 'Input',
+        colProps: {
+          span: 24
+        }
+      },
+      {
+        field: 'role_ids',
+        label: t('adminstrator.role'),
+        component: 'Select',
+        componentProps: {
+          multiple: true,
+          options: roles,
+          value: ''
+        },
+        colProps: {
+          span: 24
+        }
       }
-    })
+    )
   }
 }
 

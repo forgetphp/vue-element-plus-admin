@@ -4,4 +4,5 @@ export type RoleInfo = {
   display_name: string
   state: number
   description: string
+  menus: []
 }

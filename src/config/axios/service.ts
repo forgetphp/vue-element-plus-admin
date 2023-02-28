@@ -19,6 +19,7 @@ import type { Action } from 'element-plus'
 //import { useRouter } from 'vue-router'
 import { loginOutApi } from '@/api/login'
 const { wsCache } = useCache()
+import { useRouter } from 'vue-router'
 
 const tagsViewStore = useTagsViewStore()
 
@@ -26,7 +27,7 @@ const { result_code, base_url } = config
 
 export const PATH_URL = base_url[import.meta.env.VITE_API_BASEPATH]
 
-//const { replace } = useRouter() || {}
+const { replace } = useRouter() || {}
 
 // 创建axios实例
 const service: AxiosInstance = axios.create({
@@ -86,6 +87,11 @@ service.interceptors.response.use(
         case 204:
           break
         default:
+          if (response.data.code == 404) {
+            console.log('404 page not found', replace)
+            //replace || replace('/404')
+            return
+          }
           console.log(response)
 
           ElMessage.error(response.data.msg)
@@ -105,6 +111,10 @@ service.interceptors.response.use(
       case 419:
       case 10043:
         needLogin()
+        break
+      case 404:
+        console.log('404 page not found')
+        replace('/404')
         break
       default:
         console.log(error.response)

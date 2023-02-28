@@ -3,22 +3,34 @@ import { ContentWrap } from '@/components/ContentWrap'
 import { Search } from '@/components/Search'
 import { Dialog } from '@/components/Dialog'
 import { useI18n } from '@/hooks/web/useI18n'
-import { ElButton, ElImage, ElMessage, ElSwitch } from 'element-plus'
+import {
+  ElButton,
+  ElDrawer,
+  ElInput,
+  ElMessage,
+  ElSwitch,
+  ElTabPane,
+  ElTabs,
+  ElTree
+} from 'element-plus'
 import { Table } from '@/components/Table'
 import {
   getTableListApi,
   saveTableApi,
   delTableListApi,
   disableApi,
-  updateTableApi
+  updateTableApi,
+  putRoleMenuApi
 } from '@/api/role'
 import { useTable } from '@/hooks/web/useTable'
 import { AdminInfo } from '@/api/admin/type'
-import { h, ref, unref, reactive } from 'vue'
+import { h, ref, unref, reactive, watch } from 'vue'
 import Write from './components/Write.vue'
 import Detail from './components/Detail.vue'
 import { CrudSchema, useCrudSchemas } from '@/hooks/web/useCrudSchemas'
 import { TableColumn } from '@/types/table'
+import { getRoelMenusApi } from '@/api/login'
+import { RoleInfo } from '@/api/role/types'
 
 const { register, tableObject, methods } = useTable<AdminInfo>({
   getListApi: getTableListApi,
@@ -147,7 +159,7 @@ const crudSchemas = reactive<CrudSchema[]>([
   },
   {
     field: 'action',
-    width: '260px',
+    width: '360px',
     label: t('tableDemo.action'),
     form: {
       show: false
@@ -234,6 +246,55 @@ const save = async () => {
     }
   })
 }
+
+const drawerVisable = ref(false)
+interface Tree {
+  id: number
+  display_name: string
+  children?: Tree[]
+}
+interface MenuRole {
+  menu_id: number
+  role_id: number
+}
+const tempMenuIds = ref([])
+const treeData = ref<Tree[]>([])
+const currentTabs = ref('menus')
+const filterText = ref('')
+const treeRef = ref<InstanceType<typeof ElTree>>()
+const defaultProps = {
+  children: 'children',
+  label: 'display_name'
+}
+const currentTempRole = ref<RoleInfo>()
+const openDrawer = (row: RoleInfo) => {
+  currentTempRole.value = row
+  drawerVisable.value = true
+}
+const closeDrawer = async () => {
+  drawerVisable.value = false
+  const keys = treeRef.value!.getCheckedKeys(false)
+  const res = await putRoleMenuApi(currentTempRole.value?.id, keys)
+  console.log('select keys ==> ', keys, res)
+  getList()
+}
+
+const onOpenDrawer = async () => {
+  const { data } = await getRoelMenusApi()
+  tempMenuIds.value = currentTempRole.value?.menus.map((element: MenuRole) => {
+    return element.menu_id
+  })
+  treeRef.value!.setCheckedKeys(tempMenuIds.value, false)
+  treeData.value = data
+}
+
+const filterNode = (value: string, data: Tree) => {
+  if (!value) return true
+  return data.display_name.includes(value)
+}
+watch(filterText, (val) => {
+  treeRef.value!.filter(val)
+})
 </script>
 
 <template>
@@ -264,13 +325,16 @@ const save = async () => {
       @register="register"
     >
       <template #action="{ row }">
-        <ElButton type="primary" @click="action(row, 'edit')">
+        <ElButton type="primary" size="small" @click="openDrawer(row)">
+          {{ t('role.addPermission') }}
+        </ElButton>
+        <ElButton type="primary" size="small" @click="action(row, 'edit')">
           {{ t('exampleDemo.edit') }}
         </ElButton>
-        <ElButton type="success" @click="action(row, 'detail')">
+        <ElButton type="success" size="small" @click="action(row, 'detail')">
           {{ t('exampleDemo.detail') }}
         </ElButton>
-        <ElButton type="danger" @click="delData(row, false)">
+        <ElButton type="danger" size="small" @click="delData(row, false)">
           {{ t('exampleDemo.del') }}
         </ElButton>
       </template>
@@ -298,4 +362,34 @@ const save = async () => {
       <ElButton @click="dialogVisible = false">{{ t('dialogDemo.close') }}</ElButton>
     </template>
   </Dialog>
+
+  <ElDrawer
+    v-model="drawerVisable"
+    direction="rtl"
+    :with-header="false"
+    @open="onOpenDrawer"
+    size="50%"
+  >
+    <ElTabs v-model="currentTabs" type="card">
+      <ElTabPane :label="t('role.menus')" name="menus">
+        <ElInput v-model="filterText" :placeholder="t('role.menusFilterText')" />
+        <ElTree
+          ref="treeRef"
+          :data="treeData"
+          show-checkbox
+          default-expand-all
+          node-key="id"
+          highlight-current
+          :props="defaultProps"
+          :filter-node-method="filterNode"
+        />
+      </ElTabPane>
+    </ElTabs>
+    <template #footer>
+      <div style="flex: auto">
+        <ElButton @click="drawerVisable = false">{{ t('common.cancel') }}</ElButton>
+        <ElButton type="primary" @click="closeDrawer">{{ t('common.ok') }}</ElButton>
+      </div>
+    </template>
+  </ElDrawer>
 </template>

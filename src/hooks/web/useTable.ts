@@ -162,7 +162,12 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
       methods.getList()
     },
     // 删除数据
-    delList: async (ids: string[] | number[], multiple: boolean, message = true) => {
+    delList: async (
+      ids: string[] | number[],
+      multiple: boolean,
+      message = true,
+      callback = () => {}
+    ) => {
       const tableRef = await getTable()
       if (multiple) {
         if (!tableRef?.selections.length) {
@@ -182,9 +187,11 @@ export const useTable = <T = any>(config?: UseTableConfig<T>) => {
           type: 'warning'
         }).then(async () => {
           await delData(ids)
+          callback()
         })
       } else {
         await delData(ids)
+        callback()
       }
     }
   }

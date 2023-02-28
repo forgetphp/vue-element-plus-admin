@@ -449,13 +449,54 @@ export default {
     phone: '电话',
     state_yes: '正常',
     disable: '禁用',
-    password: '密码'
+    password: '密码',
+    role: '角色'
   },
   role: {
     id: 'ID',
     name: '角色',
     display_name: '角色名称',
     state: '状态',
-    description: '备注'
+    description: '备注',
+    addPermission: '增加权限',
+    menus: '角色菜单',
+    menusFilterText: '请输入关键字过滤角色菜单'
+  },
+  menus: {
+    id: 'ID',
+    pid: '父级菜单',
+    sort: '排序',
+    type: '类型',
+    icon: '图标',
+    display_name: '菜单名称',
+    name: '路由Name',
+    path: '路由Path',
+    component: '组件路径',
+    is_hidden: '是否隐藏',
+    is_root: '是否根菜单',
+    is_cache: '是否缓存',
+    active_menu: '选中时显示的菜单',
+    follow_auth: '根随那个菜单权限',
+    can_to: 'can_to',
+    extra: 'extra',
+    add: '新增顶级菜单',
+    addsub: '增加子菜单',
+    edit: '编辑菜单',
+    copy: '复制',
+    tips: '新增菜单，需要在角色管理内配置权限才可使用',
+    displaynameLabelMessage: '设置该路由在侧边栏和面包屑中展示的名字',
+    iconLabelMessage: '设置该路由的图标',
+    nameLabelMessage: '设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题',
+    isHiddenLabelMessage: '当设置 true 的时候该路由不会再侧边栏出现 如404，login等页面(默认 false)',
+    pidLabelMessage: '父级菜单置空为顶级菜单',
+    componentLabelMessage: '默认路径为：views/xxx/xxx, 不用加 .vue 后缀 # 号为根菜单，## 菜单',
+    isRootLabelMessage: `当你一个路由下面的 children 声明的路由大于1个时，自动会变成嵌套的模式，<br>
+    只有一个时，会将那个子路由当做根路由显示在侧边栏，<br>
+    若你想不管路由下面的 children 声明的个数都显示你的根路由，<br>
+    你可以设置 alwaysShow: true，这样它就会忽略之前定义的规则，<br>
+    一直显示根路由(默认 false)`,
+    isCacheLabelMessage: '如果设置为true，则不会被 <keep-alive> 缓存(默认 false)',
+    redirect: '默认跳转地址',
+    redirectLabelMessage: '当设置 noredirect 的时候该路由在面包屑导航中不可被点击'
   }
 }

@@ -23,6 +23,7 @@ export type ComponentName =
   | 'InputCaptcha'
   | 'SMUpload'
   | 'SMUploadSingle'
+  | 'TreeSelect'
 
 export type ColProps = {
   span?: number

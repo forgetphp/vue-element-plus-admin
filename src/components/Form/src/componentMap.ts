@@ -16,7 +16,8 @@ import {
   ElTimeSelect,
   ElTransfer,
   ElAutocomplete,
-  ElDivider
+  ElDivider,
+  ElTreeSelect
 } from 'element-plus'
 import { InputPassword } from '@/components/InputPassword'
 import { Editor } from '@/components/Editor'
@@ -48,7 +49,8 @@ const componentMap: Recordable<Component, ComponentName> = {
   Editor: Editor,
   InputCaptcha: InputCaptcha,
   SMUpload: SMUpload,
-  SMUploadSingle: SMUploadSingle
+  SMUploadSingle: SMUploadSingle,
+  TreeSelect: ElTreeSelect
 }
 
 export { componentMap }
